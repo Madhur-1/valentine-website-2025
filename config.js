@@ -168,22 +168,16 @@ const CONFIG = {
     music: {
         enabled: true,
         autoplay: true,
-        musicUrl: "https://res.cloudinary.com/dncywqfpb/video/upload/v1738399057/music_qrhjvy.mp3",
+        musicUrl: "assets/music/tera-ban-jaunga.mp3",
         startText: "🎵 Play Music",
         stopText: "🔇 Stop Music",
         nextText: "⏭ Next Song",
         nowPlayingPrefix: "🎶 Now Playing",
         showNowPlaying: true,
         shuffle: false,
-        // Popular romantic Bollywood picks (selected by long-run popularity).
-        // Paste direct MP3 links (Cloudinary/CDN) for each track URL below.
-        // If left empty, musicUrl above is used as fallback.
+        // Use local MP3 files in assets/music or direct MP3 URLs.
         playlist: [
-            // { title: "Tum Hi Ho (Aashiqui 2)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/tum-hi-ho.mp3" },
-            // { title: "Raataan Lambiyan (Shershaah)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/raataan-lambiyan.mp3" },
-            // { title: "Agar Tum Saath Ho (Tamasha)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/agar-tum-saath-ho.mp3" },
-            // { title: "Kesariya (Brahmastra)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/kesariya.mp3" },
-            // { title: "Tera Ban Jaunga (Kabir Singh)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/tera-ban-jaunga.mp3" }
+            { title: "Tera Ban Jaunga (Kabir Singh)", url: "assets/music/tera-ban-jaunga.mp3" }
         ],
         volume: 0.5
     }
