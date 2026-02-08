@@ -20,6 +20,7 @@ If you liked it, please :
 ## ✨ Features
 - 💖 Floating hearts and bears
 - 🎵 Custom music
+- 🔐 Optional private code gate
 - 📏 Love meter that goes beyond 100%
 - 🏃‍♂️ Playful buttons that run away
 - 🎁 Hidden answer for the first question, "Do you like me?"
@@ -47,6 +48,18 @@ Here's what you can customize in `config.js`:
 // Basic Information
 valentineName: "Jade"                    // Your Valentine's name
 pageTitle: "Will You Be My Valentine? 💝" // Browser tab title
+
+// Optional private gate (client-side)
+accessControl: {
+    enabled: true,
+    title: "Only for my favorite person 💌",
+    subtitle: "Enter our private code to unlock this page.",
+    hint: "Ask me for the code.",
+    placeholder: "Enter private code",
+    buttonText: "Unlock 💖",
+    errorText: "Wrong code. Try again 💗",
+    passphraseSha256: "PASTE_SHA256_HASH_HERE"
+}
 
 // Floating Background Elements
 floatingEmojis: {
@@ -115,6 +128,23 @@ music: {
     volume: 0.5 // Volume level (0.0 to 1.0)
 }
 ```
+
+### Optional: Add A Private Access Code 🔐
+
+If you want a simple private lock screen before the page opens:
+
+1. Pick a private code (example: `our-secret-2026`).
+2. Generate SHA-256 hash locally:
+   - macOS/Linux:
+   ```bash
+   printf "our-secret-2026" | shasum -a 256
+   ```
+3. Copy the 64-character hash and paste it into:
+   - `config.js` → `accessControl.passphraseSha256`
+4. Keep `accessControl.enabled: true`.
+
+Important: on GitHub Pages this is a client-side lock, not true server authentication.
+For stronger protection, deploy behind Cloudflare Access, Netlify password protection, or another auth layer.
 
 ### 3. Adding Your Own Background Music 🎵
 

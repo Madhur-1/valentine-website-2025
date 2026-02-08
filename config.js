@@ -12,6 +12,19 @@ const CONFIG = {
     // If blank, it automatically targets the next Feb 14.
     specialDate: "2026-02-14",
 
+    // Private access lock (client-side passcode gate).
+    // Share the plain code privately with your girlfriend.
+    accessControl: {
+        enabled: true,
+        title: "Only for my Cutuuu 💌",
+        subtitle: "This page is private. Enter our special code to continue.",
+        hint: "If you forgot the code, ask your baby Madhur 🤍",
+        placeholder: "Enter our private code",
+        buttonText: "Unlock 💖",
+        errorText: "That code is not right, try again cutuuu 💗",
+        passphraseSha256: "749df0c27a3adbf0f4839288bf0657f73af6f272e07c335925c292650275afbc"
+    },
+
     // Long-distance love section
     longDistance: {
         enabled: true,

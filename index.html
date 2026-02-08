@@ -10,6 +10,21 @@
 <body>
     <div class="floating-elements" aria-hidden="true"></div>
 
+    <section id="accessGate" class="access-gate hidden" aria-live="polite">
+        <div class="access-card">
+            <p class="eyebrow">Private Link</p>
+            <h2 id="accessTitle">Only for my favorite person 💌</h2>
+            <p id="accessSubtitle" class="access-subtitle"></p>
+            <form id="accessForm" class="access-form">
+                <label class="access-label" for="accessInput">Private Code</label>
+                <input id="accessInput" class="access-input" type="password" autocomplete="off" spellcheck="false" required>
+                <button id="accessSubmit" type="submit" class="cute-btn access-submit"></button>
+            </form>
+            <p id="accessHint" class="access-hint"></p>
+            <p id="accessError" class="access-error hidden"></p>
+        </div>
+    </section>
+
     <div id="musicControls" class="music-controls">
         <div class="music-actions">
             <button id="musicToggle" class="music-btn">🎵 Play Music</button>
@@ -22,7 +37,7 @@
         </audio>
     </div>
 
-    <main class="container">
+    <main class="container" id="mainApp">
         <header class="hero">
             <p class="eyebrow">Made for one person only</p>
             <h1 id="valentineTitle"></h1>

@@ -5,6 +5,16 @@ const DEFAULT_CONFIG = {
     pageTitle: "Will You Be My Valentine? 💝",
     introLine: "I made this little universe just to see you smile.",
     specialDate: "",
+    accessControl: {
+        enabled: false,
+        title: "Only for my favorite person 💌",
+        subtitle: "Enter our private code to unlock this page.",
+        hint: "Ask for the private code.",
+        placeholder: "Enter private code",
+        buttonText: "Unlock 💖",
+        errorText: "Wrong code. Try again 💗",
+        passphraseSha256: ""
+    },
     longDistance: {
         enabled: false,
         tagline: "Different cities, one heartbeat.",
@@ -145,6 +155,7 @@ let currentTrackIndex = 0;
 let isSectionTransitioning = false;
 let autoPlayUnlockBound = false;
 const autoPlayUnlockEvents = ["pointerdown", "keydown"];
+let appStarted = false;
 
 window.addEventListener("DOMContentLoaded", initialize);
 
@@ -152,6 +163,20 @@ function initialize() {
     validateConfig();
     document.title = config.pageTitle;
     cacheRefs();
+    if (shouldShowAccessGate()) {
+        showAccessGate();
+        return;
+    }
+    startExperience();
+}
+
+function startExperience() {
+    if (appStarted) {
+        return;
+    }
+
+    appStarted = true;
+    refs.musicControls.classList.remove("hidden");
     applyContent();
     bindEvents();
     createFloatingElements();
@@ -169,6 +194,15 @@ function initialize() {
 
 function cacheRefs() {
     const ids = [
+        "mainApp",
+        "accessGate",
+        "accessTitle",
+        "accessSubtitle",
+        "accessForm",
+        "accessInput",
+        "accessSubmit",
+        "accessHint",
+        "accessError",
         "valentineTitle",
         "introLine",
         "countdownText",
@@ -221,6 +255,98 @@ function cacheRefs() {
     ids.forEach((id) => {
         refs[id] = document.getElementById(id);
     });
+}
+
+function shouldShowAccessGate() {
+    if (!isAccessControlEnabled()) {
+        return false;
+    }
+
+    try {
+        return sessionStorage.getItem(getAccessSessionKey()) !== "1";
+    } catch {
+        return true;
+    }
+}
+
+function isAccessControlEnabled() {
+    return Boolean(config.accessControl.enabled && config.accessControl.passphraseSha256);
+}
+
+function getAccessSessionKey() {
+    return `valentine_access_${config.accessControl.passphraseSha256}`;
+}
+
+function showAccessGate() {
+    if (!refs.accessGate || !refs.mainApp || !refs.accessForm) {
+        startExperience();
+        return;
+    }
+
+    refs.mainApp.classList.add("hidden");
+    refs.musicControls.classList.add("hidden");
+    refs.accessGate.classList.remove("hidden");
+    document.body.classList.add("locked");
+
+    refs.accessTitle.textContent = config.accessControl.title;
+    refs.accessSubtitle.textContent = config.accessControl.subtitle;
+    refs.accessHint.textContent = config.accessControl.hint;
+    refs.accessInput.placeholder = config.accessControl.placeholder;
+    refs.accessSubmit.textContent = config.accessControl.buttonText;
+    refs.accessError.classList.add("hidden");
+
+    if (!refs.accessForm.dataset.bound) {
+        refs.accessForm.addEventListener("submit", handleAccessSubmit);
+        refs.accessForm.dataset.bound = "1";
+    }
+
+    setTimeout(() => {
+        refs.accessInput.focus();
+    }, 60);
+}
+
+async function handleAccessSubmit(event) {
+    event.preventDefault();
+
+    const input = refs.accessInput.value.trim();
+    if (!input) {
+        return;
+    }
+
+    let hash = "";
+    try {
+        hash = await sha256Text(input);
+    } catch {
+        refs.accessError.textContent = "This browser cannot verify the code here.";
+        refs.accessError.classList.remove("hidden");
+        return;
+    }
+    if (hash === config.accessControl.passphraseSha256.toLowerCase()) {
+        try {
+            sessionStorage.setItem(getAccessSessionKey(), "1");
+        } catch {
+            // Ignore storage failures and continue unlock in-memory.
+        }
+
+        refs.accessError.classList.add("hidden");
+        refs.accessInput.value = "";
+        refs.accessGate.classList.add("hidden");
+        refs.mainApp.classList.remove("hidden");
+        document.body.classList.remove("locked");
+        startExperience();
+        return;
+    }
+
+    refs.accessError.textContent = config.accessControl.errorText;
+    refs.accessError.classList.remove("hidden");
+    refs.accessInput.select();
+}
+
+async function sha256Text(text) {
+    const bytes = new TextEncoder().encode(text);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    const digestBytes = Array.from(new Uint8Array(digest));
+    return digestBytes.map((value) => value.toString(16).padStart(2, "0")).join("");
 }
 
 function applyContent() {
@@ -1199,6 +1325,29 @@ function validateConfig() {
             config.longDistance.to = DEFAULT_CONFIG.longDistance.to;
             warnings.push("Missing longDistance.to; fallback applied.");
         }
+    }
+
+    if (!isPlainObject(config.accessControl)) {
+        config.accessControl = DEFAULT_CONFIG.accessControl;
+        warnings.push("Missing accessControl settings; fallback applied.");
+    } else {
+        const hasCryptoSupport = typeof crypto !== "undefined" && Boolean(crypto.subtle);
+        const normalizedHash = typeof config.accessControl.passphraseSha256 === "string"
+            ? config.accessControl.passphraseSha256.trim().toLowerCase()
+            : "";
+        const isValidHash = /^[a-f0-9]{64}$/.test(normalizedHash);
+
+        if (config.accessControl.enabled && !hasCryptoSupport) {
+            config.accessControl.enabled = false;
+            warnings.push("Secure hash support unavailable; access lock disabled.");
+        }
+
+        if (config.accessControl.enabled && !isValidHash) {
+            config.accessControl.enabled = false;
+            warnings.push("Invalid accessControl.passphraseSha256; access lock disabled.");
+        }
+
+        config.accessControl.passphraseSha256 = normalizedHash;
     }
 
     if (warnings.length > 0) {
