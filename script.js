@@ -797,6 +797,8 @@ function setupMusicPlayer() {
     }
 
     if (config.music.autoplay) {
+        // Pre-bind first-interaction unlock for browsers that block unmuted autoplay.
+        enableAutoPlayUnlock();
         startPlayback({ allowAutoResume: true });
     }
 }
@@ -870,15 +872,24 @@ function updateNowPlaying(trackTitle) {
 
 function startPlayback(options = {}) {
     const { allowAutoResume = false } = options;
-    refs.bgMusic.play().then(() => {
-        refs.musicToggle.textContent = config.music.stopText;
-        disableAutoPlayUnlock();
-    }).catch(() => {
-        refs.musicToggle.textContent = config.music.startText;
-        if (allowAutoResume) {
-            enableAutoPlayUnlock();
-        }
-    });
+    const playResult = refs.bgMusic.play();
+
+    if (playResult && typeof playResult.then === "function") {
+        playResult.then(() => {
+            refs.musicToggle.textContent = config.music.stopText;
+            disableAutoPlayUnlock();
+        }).catch(() => {
+            refs.musicToggle.textContent = config.music.startText;
+            if (allowAutoResume) {
+                enableAutoPlayUnlock();
+            }
+        });
+        return;
+    }
+
+    // Older browsers may not return a Promise from play().
+    refs.musicToggle.textContent = config.music.stopText;
+    disableAutoPlayUnlock();
 }
 
 function pausePlayback() {
@@ -897,6 +908,11 @@ function toggleMusicPlayback() {
 }
 
 function handleAutoPlayUnlock() {
+    if (!refs.bgMusic.paused) {
+        disableAutoPlayUnlock();
+        return;
+    }
+
     startPlayback({ allowAutoResume: false });
 }
 
