@@ -3,87 +3,190 @@
 // ============================================
 
 const CONFIG = {
-    // Your Valentine's name that will appear in the title
-    // Example: "Jade", "Sarah", "Mike"
-    valentineName: "Jade",
-
-    // The title that appears in the browser tab
-    // You can use emojis! 💝 💖 💗 💓 💞 💕
+    // Basic setup
+    valentineName: "Mansavi",
     pageTitle: "Will You Be My Valentine? 💝",
+    introLine: "Cutuuu bchuu, your baby Madhur is always with you, from Abu Dhabi to Punjab.",
 
-    // Floating emojis that appear in the background
-    // Find more emojis at: https://emojipedia.org
-    floatingEmojis: {
-        hearts: ['❤️', '💖', '💝', '💗', '💓'],  // Heart emojis
-        bears: ['🧸', '🐻']                       // Cute bear emojis
+    // Optional: set a fixed special date in YYYY-MM-DD format.
+    // If blank, it automatically targets the next Feb 14.
+    specialDate: "2026-02-14",
+
+    // Long-distance love section
+    longDistance: {
+        enabled: true,
+        tagline: "Two cities. One heartbeat.",
+        line: "Cutuuu Patuttuuuu, I am there with youu naaaa 💞",
+        from: {
+            label: "Abu Dhabi, UAE",
+            timezone: "Asia/Dubai",
+            emoji: "🌇"
+        },
+        to: {
+            label: "Punjab, India",
+            timezone: "Asia/Kolkata",
+            emoji: "🌾"
+        },
+        // You said next meet is in 2 months, so this is set to April 8, 2026.
+        nextMeetDate: "2026-04-08",
+        nextMeetLabel: "Until I see you in person",
+        fallbackMessage: "Until we meet, every call, message, and prayer keeps us close."
     },
 
-    // Questions and answers
-    // Customize each question and its possible responses
+    // Floating emojis in the background
+    floatingEmojis: {
+        hearts: ["❤️", "💖", "💝", "💗", "💓"],
+        bears: ["🧸", "🐻"]
+    },
+
+    // Questions shown in sequence
     questions: {
         first: {
-            text: "Do you like me?",                                    // First interaction
-            yesBtn: "Yes",                                             // Text for "Yes" button
-            noBtn: "No",                                               // Text for "No" button
-            secretAnswer: "I don't like you, I love you! ❤️"           // Secret hover message
+            text: "Cutuuu, do you love your baby Madhur? 💗",
+            yesBtn: "Yes 😌",
+            noBtn: "No 🙈",
+            secretAnswer: "I don't like you, I love you! ❤️"
         },
         second: {
-            text: "How much do you love me?",                          // For the love meter
-            startText: "This much!",                                   // Text before the percentage
-            nextBtn: "Next ❤️"                                         // Text for the next button
+            text: "How much do you love me?",
+            startText: "This much!",
+            nextBtn: "Next ❤️"
         },
         third: {
-            text: "Will you be my Valentine on February 14th, 2025? 🌹", // The big question!
-            yesBtn: "Yes!",                                             // Text for "Yes" button
-            noBtn: "No"                                                 // Text for "No" button
+            // {year} is replaced automatically
+            text: "Will you be my Valentine on February 14th, {year}? 🌹",
+            yesBtn: "Yes, of course! 💞",
+            noBtn: "No"
         }
     },
 
-    // Love meter messages
-    // They show up depending on how far they slide the meter
-    loveMessages: {
-        extreme: "WOOOOW You love me that much?? 🥰🚀💝",  // Shows when they go past 5000%
-        high: "To infinity and beyond! 🚀💝",              // Shows when they go past 1000%
-        normal: "And beyond! 🥰"                           // Shows when they go past 100%
+    // Love meter behavior
+    loveMeter: {
+        min: 0,
+        max: 10000,
+        initial: 100
     },
 
-    // Messages that appear after they say "Yes!"
+    // Messages based on love meter values
+    loveMessages: {
+        extreme: "WOOOOW You love me that much?? 🥰🚀💝",
+        high: "To infinity and beyond! 🚀💝",
+        normal: "And beyond! 🥰"
+    },
+
+    // Final celebration content
     celebration: {
         title: "Yay! I'm the luckiest person in the world! 🎉💝💖💝💓",
-        message: "Now come get your gift, a big warm hug and a huge kiss!",
-        emojis: "🎁💖🤗💝💋❤️💕"  // These will bounce around
+        message: "My Cutuuu said yes! Now your baby Madhur owes you the biggest hug and sweetest kiss.",
+        emojis: "🎁💖🤗💝💋❤️💕",
+        surpriseButton: "One More Surprise ✨",
+        surpriseMessage: "You call me baby, Madhur, jaanuu... and every single time my heart melts."
     },
 
-    // Color scheme for the website
-    // Use https://colorhunt.co or https://coolors.co to find beautiful color combinations
+    // Love letter section shown after she says yes
+    loveLetter: {
+        greeting: "My Cutuuu bchuu,",
+        paragraphs: [
+            "You are very, very cute and I never get tired of looking at you or thinking about you.",
+            "I admire how kind you are to everyone and especially to me. Your heart is one of my favorite things about you.",
+            "I love how understanding you are and how excited you get to talk to me. I always want those conversations to continue forever.",
+            "You are my biggest fan and I feel your happiness every time I do something good. That support means everything to me."
+        ],
+        signature: "Forever your baby, Madhur 💌"
+    },
+
+    // Quick reasons list
+    reasons: [
+        "You are very very cute, and your smile instantly fixes my mood.",
+        "You are so kind to others and to me, and I deeply admire that quality in you.",
+        "You are very understanding, and that makes me feel safe with you.",
+        "You are always so excited to talk to me and never get tired of our conversations.",
+        "You are my biggest fan, and your happiness when I do well gives me so much strength."
+    ],
+
+    // Memory cards
+    memories: [
+        {
+            emoji: "🏔️",
+            title: "Our first meeting in Kasauli",
+            date: "The trip with Shubi",
+            description: "I still remember how exciting and scary it felt before meeting you for the first time, wondering how everything would go. But that night changed everything for me - full of masti, real conversations, and the moment you wiped the sweat from my forehead with so much love. That moment melted me."
+        },
+        {
+            emoji: "📞",
+            title: "Our lovely late-night calls",
+            date: "After work, almost every night",
+            description: "After we both finish work, I mostly just listen to my madam tell me everything about her day. Hearing your sweet voice makes me feel so relaxed and comfortable, Cutuuu. And sleeping on call together every night is what makes this long distance feel easy for us."
+        },
+        {
+            emoji: "🏙️",
+            title: "When you came to Bangalore",
+            date: "The visit that made everything stronger",
+            description: "We were both tensed about how it would go, but it turned out to be one of the best times of my life. Living with you was amazing, and the way you kept my room clean and fresh made me love it even more. From pampering you, cooking dates, meeting friends, movie nights, shopping, office visits, and park walks - you made my life so so gooddd."
+        }
+    ],
+
+    // Date plan shown after celebration
+    datePlan: [
+        "A video-call dinner date for now, with your favorite songs playing",
+        "A shared movie night while we text through every scene",
+        "A handwritten letter + surprise gift sent with love",
+        "A countdown to the day I can finally hold you again",
+        "When we meet: flowers, a long hug, and endless kisses"
+    ],
+
+    // Optional gallery section (set enabled: true and add image URLs)
+    gallery: {
+        enabled: true,
+        images: [
+            {
+                url: "assets/photos/our-favorite-photo.jpg",
+                alt: "Our favorite photo together",
+                caption: "My favorite us moment 💖"
+            }
+        ]
+    },
+
+    // Color theme
     colors: {
-        backgroundStart: "#ffafbd",      // Gradient start (try pastel colors for a soft look)
-        backgroundEnd: "#ffc3a0",        // Gradient end (should complement backgroundStart)
-        buttonBackground: "#ff6b6b",     // Button color (should stand out against the background)
-        buttonHover: "#ff8787",          // Button hover color (slightly lighter than buttonBackground)
-        textColor: "#ff4757"             // Text color (make sure it's readable!)
+        backgroundStart: "#f9a8b5",
+        backgroundEnd: "#ffd8b1",
+        buttonBackground: "#d64062",
+        buttonHover: "#ea6a87",
+        textColor: "#922640"
     },
 
-    // Animation settings
-    // Adjust these if you want faster/slower animations
+    // Animation tuning
     animations: {
-        floatDuration: "15s",           // How long it takes hearts to float up (10-20s recommended)
-        floatDistance: "50px",          // How far hearts move sideways (30-70px recommended)
-        bounceSpeed: "0.5s",            // Speed of bouncing animations (0.3-0.7s recommended)
-        heartExplosionSize: 1.5         // Size of heart explosion effect (1.2-2.0 recommended)
+        floatDuration: "15s",
+        floatDistance: "50px",
+        bounceSpeed: "0.5s",
+        heartExplosionSize: 1.5
     },
 
-    // Background Music (Optional)
-    // Add your own music URL after getting proper licenses
+    // Background music
     music: {
-        enabled: true,                     // Music feature is enabled
-        autoplay: true,                    // Try to autoplay (note: some browsers may block this)
-        musicUrl: "https://res.cloudinary.com/dncywqfpb/video/upload/v1738399057/music_qrhjvy.mp3", // Music streaming URL
-        startText: "🎵 Play Music",        // Button text to start music
-        stopText: "🔇 Stop Music",         // Button text to stop music
-        volume: 0.5                        // Volume level (0.0 to 1.0)
+        enabled: true,
+        autoplay: true,
+        musicUrl: "https://res.cloudinary.com/dncywqfpb/video/upload/v1738399057/music_qrhjvy.mp3",
+        startText: "🎵 Play Music",
+        stopText: "🔇 Stop Music",
+        nextText: "⏭ Next Song",
+        nowPlayingPrefix: "🎶 Now Playing",
+        showNowPlaying: true,
+        shuffle: false,
+        // Popular romantic Bollywood picks (selected by long-run popularity).
+        // Paste direct MP3 links (Cloudinary/CDN) for each track URL below.
+        // If left empty, musicUrl above is used as fallback.
+        playlist: [
+            // { title: "Tum Hi Ho (Aashiqui 2)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/tum-hi-ho.mp3" },
+            // { title: "Raataan Lambiyan (Shershaah)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/raataan-lambiyan.mp3" },
+            // { title: "Agar Tum Saath Ho (Tamasha)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/agar-tum-saath-ho.mp3" },
+            // { title: "Kesariya (Brahmastra)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/kesariya.mp3" },
+            // { title: "Tera Ban Jaunga (Kabir Singh)", url: "https://res.cloudinary.com/your-cloud/video/upload/v123/tera-ban-jaunga.mp3" }
+        ],
+        volume: 0.5
     }
 };
 
-// Don't modify anything below this line unless you know what you're doing
-window.VALENTINE_CONFIG = CONFIG; 
+window.VALENTINE_CONFIG = CONFIG;

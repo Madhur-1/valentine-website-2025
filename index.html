@@ -3,75 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CUSTOMIZE: Browser tab title -->
     <title>Will You Be My Valentine? 💝</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Floating Background Elements -->
-    <div class="floating-elements">
-        <!-- Hearts and bears will be added here by JavaScript -->
+    <div class="floating-elements" aria-hidden="true"></div>
+
+    <div id="musicControls" class="music-controls">
+        <div class="music-actions">
+            <button id="musicToggle" class="music-btn">🎵 Play Music</button>
+            <button id="nextSongBtn" class="music-btn music-btn--secondary hidden">⏭ Next Song</button>
+        </div>
+        <p id="nowPlaying" class="now-playing hidden"></p>
+        <audio id="bgMusic" loop>
+            <source id="musicSource" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
     </div>
 
-    <!-- Main Content Container -->
-    <div class="container">
-        <h1 id="valentineTitle"></h1>
-        
-        <!-- Music Player -->
-        <div id="musicControls" class="music-controls">
-            <button id="musicToggle" class="music-btn">🎵 Play Music</button>
-            <audio id="bgMusic" loop>
-                <source id="musicSource" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
+    <main class="container">
+        <header class="hero">
+            <p class="eyebrow">Made for one person only</p>
+            <h1 id="valentineTitle"></h1>
+            <p id="introLine" class="intro-line"></p>
+            <p id="countdownText" class="countdown"></p>
+        </header>
 
-        <!-- First Question -->
-        <div class="question-section" id="question1">
-            <h2 id="question1Text"></h2>
-            <button class="cute-btn" onclick="moveButton(this)" id="yesBtn1"></button>
-            <button class="cute-btn" onclick="moveButton(this)" id="noBtn1"></button>
-            <!-- CUSTOMIZE: Secret answer text -->
-            <div class="secret-answer">
-                <button class="cute-btn special" onclick="showNextQuestion(2)" id="secretAnswerBtn"></button>
+        <section class="distance-section hidden" id="distanceSection">
+            <p id="distanceTagline" class="distance-tagline"></p>
+            <p id="distanceLine" class="distance-line"></p>
+            <div class="distance-clocks">
+                <article class="clock-card">
+                    <p id="fromLocation" class="clock-location"></p>
+                    <p id="fromTime" class="clock-time"></p>
+                    <p id="fromTimeMeta" class="clock-meta"></p>
+                </article>
+                <article class="clock-card">
+                    <p id="toLocation" class="clock-location"></p>
+                    <p id="toTime" class="clock-time"></p>
+                    <p id="toTimeMeta" class="clock-meta"></p>
+                </article>
             </div>
-        </div>
+            <p id="nextMeetCountdown" class="next-meet"></p>
+        </section>
 
-        <!-- Second Question (Love Meter) -->
-        <div class="question-section hidden" id="question2">
+        <section class="question-section" id="question1">
+            <h2 id="question1Text"></h2>
+            <div class="btn-row">
+                <button class="cute-btn" id="yesBtn1"></button>
+                <button class="cute-btn cute-btn--ghost" id="noBtn1"></button>
+            </div>
+            <div class="secret-answer">
+                <button class="cute-btn cute-btn--tiny" id="secretAnswerBtn"></button>
+            </div>
+        </section>
+
+        <section class="question-section hidden" id="question2">
             <h2 id="question2Text"></h2>
-            <!-- Love meter settings: min="0" max="10000" -->
             <div class="love-meter">
-                <input type="range" min="0" max="10000" value="100" class="slider" id="loveMeter">
+                <input type="range" min="0" max="10000" value="100" class="slider" id="loveMeter" aria-label="Love meter">
                 <p>
-                    <span class="love-value-container"><span id="startText"></span> (<span id="loveValue">100</span>%)</span>
+                    <span class="love-value-container">
+                        <span id="startText"></span>
+                        (<span id="loveValue">100</span>%)
+                    </span>
                     <span id="extraLove" class="hidden"></span>
                 </p>
             </div>
-            <button class="cute-btn" onclick="showNextQuestion(3)" id="nextBtn"></button>
-        </div>
+            <button class="cute-btn" id="nextBtn"></button>
+        </section>
 
-        <!-- Final Question -->
-        <div class="question-section hidden" id="question3">
+        <section class="question-section hidden" id="question3">
             <h2 id="question3Text"></h2>
-            <button class="cute-btn final-yes" onclick="celebrate()" id="yesBtn3"></button>
-            <button class="cute-btn" onclick="moveButton(this)" id="noBtn3"></button>
-        </div>
+            <div class="btn-row">
+                <button class="cute-btn final-yes" id="yesBtn3"></button>
+                <button class="cute-btn cute-btn--ghost" id="noBtn3"></button>
+            </div>
+        </section>
 
-        <!-- CUSTOMIZE: Celebration message -->
-        <div class="celebration hidden" id="celebration">
+        <section class="celebration hidden" id="celebration">
             <h2 id="celebrationTitle"></h2>
             <p class="celebration-text" id="celebrationMessage"></p>
-            <p class="celebration-text" id="celebrationEmojis"></p>
-        </div>
-    </div>
+            <p class="celebration-text celebration-emojis" id="celebrationEmojis"></p>
+            <button class="cute-btn hidden" id="surpriseBtn"></button>
+            <p class="surprise-message hidden" id="surpriseMessage"></p>
+        </section>
 
-    <!-- Scripts -->
+        <section class="story-section hidden" id="storySection">
+            <article class="story-card letter-card">
+                <h3>My Love Letter To You</h3>
+                <p id="letterGreeting" class="letter-greeting"></p>
+                <div id="letterBody" class="letter-body"></div>
+                <p id="letterSignature" class="letter-signature"></p>
+            </article>
+
+            <article class="story-card">
+                <h3>Reasons I Adore You</h3>
+                <ul id="reasonsList" class="reasons-list"></ul>
+            </article>
+
+            <article class="story-card">
+                <h3>Our Sweet Memories</h3>
+                <div id="memoriesGrid" class="memories-grid"></div>
+            </article>
+
+            <article class="story-card">
+                <h3>Our Perfect Date Plan</h3>
+                <ol id="datePlanList" class="date-plan-list"></ol>
+            </article>
+
+            <article class="story-card hidden" id="galleryCard">
+                <h3>Your Beautiful Gallery</h3>
+                <div id="galleryGrid" class="gallery-grid"></div>
+            </article>
+        </section>
+    </main>
+
     <script src="config.js"></script>
     <script src="theme.js"></script>
     <script src="script.js"></script>
 </body>
-</html> 
+</html>
