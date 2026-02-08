@@ -143,6 +143,8 @@ let celebrationShown = false;
 let musicTracks = [];
 let currentTrackIndex = 0;
 let isSectionTransitioning = false;
+let autoPlayUnlockBound = false;
+const autoPlayUnlockEvents = ["pointerdown", "keydown"];
 
 window.addEventListener("DOMContentLoaded", initialize);
 
@@ -769,6 +771,7 @@ function setupMusicPlayer() {
     refs.musicToggle.textContent = config.music.startText;
     refs.nextSongBtn.textContent = config.music.nextText;
     refs.bgMusic.volume = clampVolume(config.music.volume);
+    refs.bgMusic.preload = "auto";
 
     if (config.music.shuffle && musicTracks.length > 1) {
         currentTrackIndex = Math.floor(Math.random() * musicTracks.length);
@@ -794,7 +797,7 @@ function setupMusicPlayer() {
     }
 
     if (config.music.autoplay) {
-        startPlayback();
+        startPlayback({ allowAutoResume: true });
     }
 }
 
@@ -865,26 +868,58 @@ function updateNowPlaying(trackTitle) {
     refs.nowPlaying.classList.remove("hidden");
 }
 
-function startPlayback() {
+function startPlayback(options = {}) {
+    const { allowAutoResume = false } = options;
     refs.bgMusic.play().then(() => {
         refs.musicToggle.textContent = config.music.stopText;
+        disableAutoPlayUnlock();
     }).catch(() => {
         refs.musicToggle.textContent = config.music.startText;
+        if (allowAutoResume) {
+            enableAutoPlayUnlock();
+        }
     });
 }
 
 function pausePlayback() {
     refs.bgMusic.pause();
     refs.musicToggle.textContent = config.music.startText;
+    disableAutoPlayUnlock();
 }
 
 function toggleMusicPlayback() {
     if (refs.bgMusic.paused) {
-        startPlayback();
+        startPlayback({ allowAutoResume: false });
         return;
     }
 
     pausePlayback();
+}
+
+function handleAutoPlayUnlock() {
+    startPlayback({ allowAutoResume: false });
+}
+
+function enableAutoPlayUnlock() {
+    if (autoPlayUnlockBound) {
+        return;
+    }
+
+    autoPlayUnlockBound = true;
+    autoPlayUnlockEvents.forEach((eventName) => {
+        document.addEventListener(eventName, handleAutoPlayUnlock, { once: true });
+    });
+}
+
+function disableAutoPlayUnlock() {
+    if (!autoPlayUnlockBound) {
+        return;
+    }
+
+    autoPlayUnlockBound = false;
+    autoPlayUnlockEvents.forEach((eventName) => {
+        document.removeEventListener(eventName, handleAutoPlayUnlock);
+    });
 }
 
 function changeTrack(direction, shouldPlay = false) {
